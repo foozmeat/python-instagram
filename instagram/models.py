@@ -179,11 +179,18 @@ class Location(ApiModel):
 
 
 class User(ApiModel):
-    def __init__(self, id, *args, **kwargs):
-        self.id = id
+
+    def __init__(self, username, *args, **kwargs):
+        self.username = username
         for key, value in six.iteritems(kwargs):
             setattr(self, key, value)
-
+        if not hasattr(self, 'id'):
+            self.id = username
+        if not hasattr(self, 'full_name'):
+            self.full_name = username
+        if not hasattr(self, 'profile_picture'):
+            self.profile_picture = ''
+            
     def __unicode__(self):
         return "User: %s" % self.username
 
