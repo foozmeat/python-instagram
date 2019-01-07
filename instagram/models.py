@@ -74,6 +74,16 @@ class Media(ApiModel):
         for version, version_info in six.iteritems(entry.get('images', {})):
             new_media.images[version] = Image.object_from_dictionary(version_info)
 
+        if new_media.type == 'carousel':
+            new_media.carousel_media = []
+
+            for cm in entry.get('carousel_media', []):
+                images = {}
+                for version, version_info in six.iteritems(cm.get('images', {})):
+                    images[version] = Image.object_from_dictionary(version_info)
+
+                new_media.carousel_media.append(images)
+
         if new_media.type == 'video':
             new_media.videos = {}
             for version, version_info in six.iteritems(entry.get('videos', {})):
@@ -190,7 +200,7 @@ class User(ApiModel):
             self.full_name = username
         if not hasattr(self, 'profile_picture'):
             self.profile_picture = ''
-            
+
     def __unicode__(self):
         return "User: %s" % self.username
 
